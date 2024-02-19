@@ -1,59 +1,43 @@
-// Wait for the DOM content to be fully loaded
+// When the DOM content is loaded
 document.addEventListener('DOMContentLoaded', function() {
-  // Display current date and time when the page loads
+  // Display current date and time
   displayCurrentDateTime();
 
-  // Select the form element by its ID
+  // Add event listener to the form for year input
   const form = document.getElementById('yearForm');
-
-  // Add event listener for form submission
   form.addEventListener('submit', function(event) {
-    // Prevent the default form submission behavior
+    // Prevent form submission
     event.preventDefault();
 
-    // Get the value of the year input field
-    const yearInput = document.getElementById('year').value;
+    // Get user input for the year
+    const yearInput = document.getElementById('year');
+    const year = parseInt(yearInput.value);
 
-    // Parse the year input to an integer
-    const year = parseInt(yearInput);
-
-    // Check if the input is a valid number
+    // Check if input is a valid number
     if (isNaN(year)) {
       alert('Please enter a valid year.');
       return;
     }
 
-    // Fetch leap years data from an external JSON file
-    fetch('leap_years.json')
-      .then(response => response.json()) // Parse the JSON response
-      .then(leapYears => {
-        // Check if the input year is in the leap years array
-        const isLeapYear = leapYears.includes(year);
-
-        // Get the result div element
-        const resultDiv = document.getElementById('result');
-
-        // Generate message based on whether the year is a leap year or not
-        const leapYearMessage = isLeapYear ? `${year} is a leap year.` : `${year} is not a leap year.`;
-
-        // Display the result in the result div
-        resultDiv.textContent = leapYearMessage;
-      })
-      .catch(error => console.error('Error fetching leap years:', error)); // Log any errors that occur during fetch
+    // Get result div and display leap year status
+    const resultDiv = document.getElementById('result');
+    if (isLeapYear(year)) {
+      resultDiv.textContent = `${year} is a leap year.`;
+    } else {
+      resultDiv.textContent = `${year} is not a leap year.`;
+    }
   });
 });
 
-// Function to display the current date and time
+// Function to display current date and time
 function displayCurrentDateTime() {
-  // Get the div element where the date and time will be displayed
   const dateTimeDiv = document.getElementById('currentDateTime');
-
-  // Get the current date and time
   const now = new Date();
-
-  // Convert the date and time to a string format
   const dateTimeString = now.toLocaleString();
-
-  // Display the current date and time in the dateTimeDiv
   dateTimeDiv.textContent = `Current Date and Time: ${dateTimeString}`;
+}
+
+// Function to check if a year is a leap year
+function isLeapYear(year) {
+  return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
 }
